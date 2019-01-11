@@ -1,15 +1,12 @@
 package cn.lyh.RES.entity;
 
 public class timeData {
-    private String id;
     private String t;
 
-    public String getId() {
-        return id;
-    }
+    public timeData(){}
 
-    public void setId(String id) {
-        this.id = id;
+    public timeData(String t){
+        this.t = t;
     }
 
     public String getT() {
@@ -20,3 +17,4 @@ public class timeData {
         this.t = t;
     }
 }
+

@@ -1,61 +1,48 @@
-import numpy as np
 import random
+import sys
 from BP_layer import BP_network
 from BP_layer import load
-import matplotlib.pyplot as plt
 
-flag = 1
-is_new = True
+
+def str2double(s):
+    a = s.split(".")
+    return int(a[0]+a[1])/(10**len(a[1]))
+
+ts = sys.argv[1].split(" ")[:-1]
+s = int(sys.argv[2])     #参与模型训练数据个数
+
+data = [int(t) for t in ts]
+std = max(data)          
+data = [d/std for d in data]    #归一化
 
 #参数配置
-train_num = 1000    #样本数量
-std = 1          #归一化参数
-
-input_num = 5       #输入维数
+input_num = int(sys.argv[5])       #输入维数
 hidden_cell_num = 5  #隐含层神经元数
 hidden_layer_num = 2    #隐含层层数
-output_num = 3      #输出维数
+output_num = int(sys.argv[3])      #输出维数
 
-epoch_num = 1000   #迭代次数
-rate = 0.1          #学习率
-precision = 0.01     #预设精度
+epoch_num = int(sys.argv[6])   #迭代次数
+rate = str2double(sys.argv[4])         #学习率
+precision = str2double(sys.argv[7])     #预设精度
 
+train_num = s - input_num - output_num + 1    #样本数量
 
-#加载数据
-if flag == 0:
-    train_data = np.loadtxt("MNISTData.txt")/std
-    train_label = np.loadtxt("MNISTLabel.txt")
-elif flag == 1:
-    train_data = np.loadtxt("sinData.txt")/std
-    train_label = np.loadtxt("sinLabel.txt")
-elif flag == 2:
-    train_data = np.loadtxt("orData.txt")/std
-    train_label = np.loadtxt("orLabel.txt")
-elif flag == 3:
-    train_data = np.loadtxt("xorData.txt")/std
-    train_label = np.loadtxt("xorLabel.txt")
-else:
-    print("flag error")
-    exit(1)
+#数据集生成
+train_data = []
+train_label = []
+for i in range(0, train_num):
+    train_data = train_data + [data[i:i+input_num]]
+    train_label = train_label + [data[i+input_num:i+input_num+output_num]]
 
 #初始化
-if is_new:
-    cell_ns = [hidden_cell_num for i in range(hidden_layer_num)]
-    cell_ns = [input_num]+ cell_ns +[output_num]
-    #print(cell_ns)
-    model = BP_network(hidden_layer_num+2, cell_ns, rate)
-    #model.display()
-else:
-    if flag == 0:
-        model = load("MNIST_model.dat")
-    elif flag == 1:
-        model = load("sin_model.dat")
-    elif flag == 2:
-        model = load("or_model.dat")
-    elif flag == 3:
-        model = load("xor_model.dat")
+cell_ns = [hidden_cell_num for i in range(hidden_layer_num)]
+cell_ns = [input_num]+ cell_ns +[output_num]
+#print(cell_ns)
+model = BP_network(hidden_layer_num+2, cell_ns, rate)
+#model.display()
 
 erArray = []
+min_size = epoch_num / 100
 
 #训练
 for epoch in range(epoch_num):
@@ -79,49 +66,15 @@ for epoch in range(epoch_num):
         e_sum = e_sum + model.get_error(train_data[i],train_label[i])
 
     #e_sum = e_sum+model.get_error(train_data[index],train_label[index])-e_cur
-    if epoch % 100 == 0:
-        print("epoch:", epoch, "error:", e_sum/train_num)
-    erArray = erArray + [e_sum/train_num]
+    if epoch % min_size == 0:
+        #print(e_sum/train_num, end=" ")
+        erArray = erArray + [e_sum/train_num]
 
     #达到精度，结束学习
     if e_sum < precision:
         break
 
-print("---------------------------------")
-print("error:", e_sum/train_num)
-#model.display()
-
-#保存模型
-if flag == 0:
-    model.save("MNIST_model.dat")
-elif flag == 1:
-    model.save("sin_model.dat")
-elif flag == 2:
-    model.save("or_model.dat")
-elif flag == 3:
-    model.save("xor_model.dat")
-    #model.display()
-
-#测试
-print("---------------------------------")
-if flag == 2 or flag == 3:
-    for i in range(4):
-        index = random.randint(0, train_num-1)
-        print("model input:\t", train_data[index])
-        tmp = model.val(train_data[index])
-        print("model output:\t", tmp)
-        if tmp[0]>tmp[1]:
-            print("after softmax:\t",[1, 0])
-        else:
-            print("after softmax:\t",[0, 1])
-        print("should be:\t", train_label[index])
-        print()
-else:
-    index = random.randint(0, train_num-1)
-    print("model input:\t", train_data[index])
-    print("model output:\t", model.val(train_data[index]))
-    print("should be:\t", train_label[index])
-
-#绘制训练误差
-plt.plot(erArray)
-plt.show()
+#print("error:", e_sum/train_num)
+print(erArray)
+pre_result = model.val(data[s-input_num+1:s+1])
+print([t*std for t in pre_result])

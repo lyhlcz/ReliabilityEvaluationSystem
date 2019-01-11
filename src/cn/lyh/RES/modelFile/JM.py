@@ -49,10 +49,10 @@ def J_M(t, n, ex=1, ey=1):
         print("计算终止")
         
 
-s = 100     #参与参数估计数据个数
-
 ids = sys.argv[1].split(" ")[:-1]
 ts = sys.argv[2].split(" ")[:-1]
+s = int(sys.argv[3])     #参与参数估计数据个数
+
 data = [[int(i) for i in ids], [int(t) for t in ts]]
 #划分数据
 data = [data[0][:s],data[1][:s]]

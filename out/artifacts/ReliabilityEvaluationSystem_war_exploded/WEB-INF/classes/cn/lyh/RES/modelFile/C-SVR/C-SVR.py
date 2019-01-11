@@ -1,62 +1,33 @@
 from sklearn import svm
-import numpy as np
-import pickle as pk
-import time
-
-def loadData():
-    train_data = np.loadtxt("TrainData.txt")/255
-    train_label = np.loadtxt("TrainLabel.txt")
-    return train_data, train_label
+import sys
 
 def create_svm(dataMat, dataLabel, decision='ovr'):
     clf = svm.SVC(decision_function_shape=decision)
     clf.fit(dataMat, dataLabel)
     return clf
 
+ts = sys.argv[1].split(" ")[:-1]
+s = int(sys.argv[2])     #参与模型训练数据个数
 
-def train():
-    d, l=loadData()
-    f=open("MNISTsvm.dat",'wb')
-    clf = create_svm(d,l)
-    pk.dump(clf, f)
-    f.close()
+data = [int(t) for t in ts]
+#std = max(data)
+#data = [d/std for d in data]    #归一化
 
-def test():
-    print("load SVM.....")
-    
-    f = open("MNISTsvm.dat", 'rb')
-    clf = pk.load(f)
-    f.close()
-    
-    print("OK")
-    print("----------------------------------")
-    
-    print("start testing....")
+output_num = int(sys.argv[3])      #输出维数
+input_num = int(sys.argv[4])       #输入维数
+train_num = s - input_num - output_num + 1    #样本数量
 
-    test_data = np.loadtxt("TestData.txt")/255
-    test_label = np.loadtxt("TestLabel.txt")
-    tst = time.clock()
-    errCount = 0
-    allErrorRate = 0.0
-    allScore = 0.0
+#数据集生成
+train_data = []
+train_label = []
+for i in range(0, train_num):
+    train_data = train_data + [data[i:i+input_num]]
+    train_label = train_label + [data[i+input_num]]
 
-    preResult = clf.predict(test_data)
+clf = create_svm(train_data,train_label)
 
-    for i in range(test_label.shape[0]):
-        if preResult[i]!=test_label[i]:
-            errCount = errCount + 1
-            
-    score = clf.score(test_data, test_label)
-
-    print("OK")
-    print("----------------------------------")
-
-    tet = time.clock()
-    print("Testing All class total spent {:.6f}s.".format(tet-tst))
-    print("All error Count is: {}.".format(errCount))
-    print("Error rate is: {:.6f}.".format(errCount/test_label.shape[0]))
-    print("Average accuracy is: {:.6f}.".format(score))
-
-if __name__=="__main__":
-    train()
-    test()
+test_data = data[s-input_num+1:s+1]
+for i in range(output_num):
+    re = clf.predict([test_data])
+    print(re[0])
+    test_data = test_data[1:] + [re[0]]

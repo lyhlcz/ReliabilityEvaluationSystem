@@ -62,11 +62,11 @@ public class DaoHelper {
         jdbcTemplate.execute(sql);
         return true;
     }
-    public  boolean update(String sql,Object[] params){
+    public  boolean update(String sql){
         if(sql==null || sql.equals("")){
             return false;
         }
-        jdbcTemplate.update(sql,params);
+        jdbcTemplate.update(sql);
         return true;
     }
     //插入对象
