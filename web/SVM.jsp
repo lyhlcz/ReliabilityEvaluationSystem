@@ -343,7 +343,7 @@
 							<ul>
 								<li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
 							</ul>
 						<li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
 							<ul>
@@ -408,20 +408,22 @@
 						<form class="form-horizontal">
 							<fieldset>
 							<img style="display:block;" src="img/SVM.png" width="350" height="500" style="boder:0" align="right">
-							
+
+								<div class="text-info">
 							<br>
 							<br>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;Vapnik等人在多年研究统计学习理论基础上对线性分类器提出了另一种设计最佳准则。其原理也从线性可分说起，然后扩</p>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;展到线性不可分的情况。甚至扩展到使用非线性函数中去，这种分类器被称为支持向量机(Support Vector Machine，简称</p>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;SVM)。支持向量机的提出有很深的理论背景。</p>
+							<p>&emsp;&emsp;Vapnik等人在多年研究统计学习理论基础上对线性分类器提出了另一种设计最佳准则。其原理也从线性可分说起，然后
+								扩展到线性不可分的情况。甚至扩展到使用非线性函数中去，这种分类器被称为支持向量机(Support Vector Machine，简称SVM)。
+								支持向量机的提出有很深的理论背景。</p>
 							<br><br>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;支持向量机(SVM)是建立在统计学习理论的VC维理论和结构风险最小原理基础上的，根据有限的样本信息在模型的复杂性</p>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;(即对特定训练样本的学习精度)和学习能力(即无错误地识别任意样本的能力)之间寻求最佳折衷，以期获得最好的推广能力</p>
-							<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;(或称泛化能力)。</p>
+							<p>&emsp;&emsp;支持向量机(SVM)是建立在统计学习理论的VC维理论和结构风险最小原理基础上的，根据有限的样本信息在模型的复杂性
+								即对特定训练样本的学习精度)和学习能力(即无错误地识别任意样本的能力)之间寻求最佳折衷，以期获得最好的推广能力
+								(或称泛化能力)。</p>
 							<br>
 							<br>
 							<br>
 							<br>
+								</div>
 
                                 <div class="control-group">
                                     <label class="control-label" for="date1">预测步长</label>
@@ -498,8 +500,17 @@
                 var resultNum = $('#date1').val();
                 var inputNum = $('#date2').val();
                 var b = document.getElementById("SVMbutton");
+                if (resultNum.length == 0 || inputNum.length == 0){
+                    alert("输入不能为空");
+                    return;
+				}
                 b.innerHTML = "......";
                 post('model/SVM', {'resultNum':resultNum, 'inputNum':inputNum}, function (data) {
+                    if (data.length == 0){
+                        alert("未加载数据");
+                        b.innerHTML = "预测";
+                        return;
+                    }
                     //b.innerHTML = "预测下次失效间隔时间为 " + data[0];
                     post('model/getRealData', {'preNUM':resultNum}, function (timedata) {
                         document.getElementById('com').style.display = "inline";

@@ -348,7 +348,7 @@
                         <ul>
                             <li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-                            <li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+                            <li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
                         </ul>
                     <li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
                         <ul>
@@ -563,6 +563,14 @@
                                         }
                                     ]
                                 });
+                                if (JMdata.length == 0 || GOdata.length == 0){
+                                    alert("未加载数据");
+                                    return;
+                                }
+                                else if (JMdata.length == 1 || GOdata.length == 1){
+                                    alert("模型参数估计出错");
+                                    return;
+                                }
                             })
                         })
                 </script>

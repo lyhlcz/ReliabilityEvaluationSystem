@@ -341,7 +341,7 @@
 							<ul>
 								<li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
 							</ul>
 						<li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
 							<ul>
@@ -611,8 +611,7 @@
                         labels:{
                             format: '{value}',
                         },
-                        max:1.732e+308,
-                        tickInterval:1e+10,
+                        tickInterval:1,
                         tickWidth: 1,//刻度的宽度
                         gridLineWidth: 1,
                         min: 0
@@ -638,6 +637,14 @@
                     ]
 
                 });
+                if (PLRdata.length == 0){
+                    alert("未加载数据");
+					return;
+				}
+				else if (PLRdata.length == 1){
+                    alert("模型参数估计出错");
+                    return;
+				}
                 var plr = 1;
                 for (i in PLRdata[3]){
                     plr = plr * PLRdata[3][i];

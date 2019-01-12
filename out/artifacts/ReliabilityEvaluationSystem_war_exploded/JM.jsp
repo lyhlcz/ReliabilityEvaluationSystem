@@ -236,7 +236,7 @@
 							<ul>
 								<li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
 							</ul>
 						<li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
 							<ul>
@@ -306,8 +306,11 @@
 									<img style="display: block;"
 										src="img/JM.png" width="420"
 										height="480" style="boder:0" align="right"> <br> <br>
+
+									<div class="text-info">
 									<p>&emsp;&emsp;JM模型是由Jelinski、Moranda于1972年开发的可靠性模型，是最早建立的软件可靠性模型之一，曾用于麦克唐耐道格拉斯海军工程中。是一种较为经典的呈指数分布的NHPP模型。</p>
 									<p>&emsp;&emsp;JM模型以一种简便和合乎直觉的方式表明如何根据软件缺陷的显露历程来预计未来软件可靠性的行为，它包含软件可靠性建模中若干典型和最主要的假设，因为引发出后来的许多种变形。</p>
+									</div>
 
                                     <div class="span7">
                                         <button type="button" id="JMbutton" onclick="runJM()" class="btn btn-primary">参数估计</button>
@@ -372,7 +375,12 @@
             post('model/JM', [], function (data) {
                 if (data.length == 2)
                     document.getElementById('JMbutton').innerHTML = "N = " + data[0] + ", Φ = "+ data[1];
-                else document.getElementById('JMbutton').innerHTML = data[0];
+                else if (data.length == 1)
+                    document.getElementById('JMbutton').innerHTML = data[0];
+                else {
+                    alert("未加载数据");
+                    return;
+				}
                 post('model/JMF', [], function (data) {
                     Highcharts.chart('container', {
                         title: {
@@ -415,7 +423,7 @@
                         series: [
                             {
                                 data: data[1],
-                                name: 'JM-F()'
+                                name: 'JM-F'
                             }
                         ]
 

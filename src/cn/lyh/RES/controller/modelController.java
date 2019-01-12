@@ -107,21 +107,13 @@ public class modelController {
         //return new int[]{12,20};
     }
 
+    //从文件导入数据，未实现文件传输接口
     @RequestMapping(value = "/importData", method = RequestMethod.POST)
-    public @ResponseBody boolean importData(@RequestParam("file") CommonsMultipartFile file)throws IllegalStateException, IOException {
+    public @ResponseBody boolean importData(String dataName, String data){
         List<timeData> d = new ArrayList<>();
-        String dataName = "testdata3";
-        String[] tmp = new String("22 23 24").split(" ");
+        String[] tmp = data.split(" ");
         for (String t : tmp)
             d.add(new timeData(t));
-
-        System.out.println("fileName："+file.getOriginalFilename());
-        String path="E:/"+new Date().getTime()+file.getOriginalFilename();
-
-        File newFile=new File(path);
-        //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
-        file.transferTo(newFile);
-
         return dService.importNewData(new tableName(dataName), d);
     }
 
@@ -149,7 +141,7 @@ public class modelController {
             else
                 return new String[]{result.get(0)};
         }
-        else return new String[]{""};
+        else return new String[]{};
     }
 
     @RequestMapping(value = "/GO", method = RequestMethod.POST)
@@ -168,7 +160,7 @@ public class modelController {
             else
                 return new String[]{result.get(0)};
         }
-        else return new String[]{""};
+        else return new String[]{};
     }
 
     @RequestMapping(value = "/BP", method = RequestMethod.POST)
@@ -234,6 +226,9 @@ public class modelController {
             if (goModel == null){
                 this.GOmodel();
             }
+            if (jmModel == null || goModel == null){
+                return new double[][]{{1}};
+            }
             double min;
             int L = IDd.length;
             int n = L - trainNUM;
@@ -295,6 +290,9 @@ public class modelController {
             }
             if (goModel == null){
                 this.GOmodel();
+            }
+            if (jmModel == null || goModel == null){
+                return new double[][]{{1}};
             }
             int n = IDd.length - trainNUM;
             double[] PLA = new double[n];

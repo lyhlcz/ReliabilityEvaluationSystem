@@ -343,7 +343,7 @@
 							<ul>
 								<li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
 							</ul>
 						<li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
 							<ul>
@@ -409,9 +409,10 @@
 							
 							<br>
 							<br>
+								<div class="text-info">
 							<p>&emsp;&emsp;G-O模型作为最著名的NHPP模型，于1979年由Goel和Okumoto提出，是一种较为经典的呈指数分布的NHPP模型，之后又有很多人提出了不少类似的模型。</p>
 							<p>&emsp;&emsp;Goel和Okumoto于1979年提出关于连续时间的非齐次泊松过程模型,简称为NHPP类的G-O模型。他们的工作,对随后的软件可靠性模型的建立有着很大的影响, NHPP类模型已成为软件可靠性模型的一个大类。</p>
-
+								</div>
                                 <div class="span7">
 
                                         <button type="button" id="GObutton" onclick="runGO()" class="btn btn-primary">参数估计</button>
@@ -466,7 +467,12 @@
                 post('model/GO', [], function (data) {
                     if (data.length == 2)
                         document.getElementById('GObutton').innerHTML = "a = " + data[0] + ", b = "+ data[1];
-                    else document.getElementById('GObutton').innerHTML = data[0];
+                    else if (data.length == 1)
+                        document.getElementById('GObutton').innerHTML = data[0];
+                    else {
+                        alert("未加载数据");
+                        return;
+					}
                     post('model/GOF', [], function (data) {
                         Highcharts.chart('container', {
                             title: {
@@ -509,7 +515,7 @@
                             series: [
                                 {
                                     data: data[1],
-                                    name: 'GO-F()'
+                                    name: 'GO-F'
                                 }
                             ]
 

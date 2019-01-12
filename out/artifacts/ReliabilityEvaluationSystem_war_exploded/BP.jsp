@@ -343,7 +343,7 @@
 							<ul>
 								<li><a class="submenu" href="JM.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">JM模型</span></a></li>
 
-								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">G-O模型</span></a></li>
+								<li><a class="submenu" href="GO.jsp"><i class="icon-file-alt"></i><span class="hidden-tablet">GO模型</span></a></li>
 							</ul>
 						<li><a class="dropmenu" href="#"><i class="icon-folder-close-alt"></i><span class="hidden-tablet"> 人工智能</span><span class="label label-important"> 2 </span></a>
 							<ul>
@@ -404,12 +404,13 @@
 						<img style="display:block;vertical-align:bottom;" src="img/BP.png" width="320" height="430" style="boder:0" align="right">
 						
 						  <fieldset>
-							
+
+							  <div class="text-info">
 							<br>
 							<br>
 							<p>&emsp;&emsp;Rumelhart，McClelland于1985年提出了BP网络的误差反向后传BP(Back Propagation)学习算法。算法基本原理是利用输出后的误差来估计输出层的直接前导层的误差，再用这个误差估计更前一层的误差，如此一层一层的反传下去，就获得了所有其他各层的误差估计。是数据驱动的软件可靠性模型的一种最基本的算法。</p>
 							<br><br><br><br>
-
+							  </div>
                                 <div class="control-group">
                                   <label class="control-label" for="date1">预测步长</label>
                                   <div class="controls">
@@ -513,8 +514,16 @@
                 var epochs = $('#date4').val();
                 var precision = $('#date5').val();
                 var b = document.getElementById("BPbutton");
+                if (resultNum.length==0||rate.length==0||inputNum.length==0||epochs.length==0||precision.length==0){
+                    alert("输入不能为空");
+                    return;
+				}
                 b.innerHTML = "......";
                 post('model/BP', {'resultNum':resultNum, 'rate':rate, 'inputNum':inputNum, 'epochs':epochs, 'precision':precision}, function (data) {
+                    if (data.length == 0){
+                        b.innerHTML = "预测";
+                        return;
+                    }
                     var x = new Array();
                     for (var i=0;i<epochs;i+=100)
                         x.push(i)
